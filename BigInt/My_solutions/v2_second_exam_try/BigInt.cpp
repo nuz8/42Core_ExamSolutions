@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BigInt.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/05 21:10:44 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/05 21:35:19 by pamatya          ###   ########.fr       */
+/*   Created: 2025/11/06 17:36:58 by pamatya           #+#    #+#             */
+/*   Updated: 2025/11/06 17:36:59 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BigInt.hpp"
-
-BigInt::BigInt() {}
-
-BigInt::BigInt(unsigned int n) {
-	
-}
