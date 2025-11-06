@@ -6,7 +6,7 @@
 #    By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/03 23:35:34 by pamatya           #+#    #+#              #
-#    Updated: 2025/11/03 23:58:50 by pamatya          ###   ########.fr        #
+#    Updated: 2025/11/05 20:02:44 by pamatya          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME			:=	BigInt
 CC				:=	c++
 CFLAGS			:=	-Wall -Wextra -Werror -std=c++98
 
-SRCS			:=	BigInt.cpp
+SRCS			:=	bigint.cpp main.cpp
 
 OBJS			:=	$(SRCS:.cpp=.o)
 
