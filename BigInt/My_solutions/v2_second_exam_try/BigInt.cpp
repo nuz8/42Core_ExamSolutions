@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:36:58 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/07 01:01:37 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/07 16:55:42 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,12 +188,16 @@ bool	BigInt::operator>(unsigned int n) const {
 }
 
 bool	BigInt::operator<(const BigInt & rhs) const {
-	return (!(*this > rhs));
+	if (!(*this > rhs) && (*this != rhs))
+		return (true);
+	return (false);
 }
 
 bool	BigInt::operator<(unsigned int n) const {
 	BigInt	rhs(n);
-	return (!(*this > rhs));
+	if (!(*this > rhs) && (*this != rhs))
+		return (true);
+	return (false);
 }
 
 bool	BigInt::operator>=(const BigInt & rhs) const {
