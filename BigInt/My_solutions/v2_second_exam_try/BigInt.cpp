@@ -6,13 +6,13 @@
 /*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:36:58 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/07 16:55:42 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/08 20:10:33 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BigInt.hpp"
 
-BigInt::BigInt() {}
+BigInt::BigInt() : _value("0") {}
 
 BigInt::BigInt(unsigned int n) {
 	std::ostringstream oss;
@@ -100,25 +100,16 @@ unsigned int	BigInt::toInt(const std::string & num) const {
 	return (n);
 }
 
+/* Overloads for BigInt object types */
+
 BigInt	BigInt::operator+(const BigInt & rhs) const {
 	BigInt	result;
 	result._value = addStrings(_value, rhs._value);
 	return (result);
 }
 
-BigInt	BigInt::operator+(unsigned int n) const {
-	BigInt	rhs(n);
-	return (*this + rhs);
-}
-
 BigInt &	BigInt::operator+=(const BigInt & rhs) {
 	*this = *this + rhs;
-	return (*this);
-}
-
-
-BigInt &	BigInt::operator+=(unsigned int n) {
-	*this = *this + n;
 	return (*this);
 }
 
@@ -139,21 +130,7 @@ bool	BigInt::operator==(const BigInt & rhs) const {
 	return (false);
 }
 
-bool	BigInt::operator==(unsigned int n) const {
-	BigInt	rhs(n);
-	if (_value == rhs._value)
-		return (true);
-	return (false);
-}
-
 bool	BigInt::operator!=(const BigInt & rhs) const {
-	if (_value != rhs._value)
-		return (true);
-	return (false);
-}
-
-bool	BigInt::operator!=(unsigned int n) const {
-	BigInt	rhs(n);
 	if (_value != rhs._value)
 		return (true);
 	return (false);
@@ -176,25 +153,13 @@ bool	BigInt::operator>(const BigInt & rhs) const {
 			else if (val[i] < rval[i])
 				return (false);
 			else
-				i++;											// !!!
+				i++;
 		}
 	}
 	return (false);
 }
 
-bool	BigInt::operator>(unsigned int n) const {
-	BigInt	rhs(n);
-	return (*this > rhs);
-}
-
 bool	BigInt::operator<(const BigInt & rhs) const {
-	if (!(*this > rhs) && (*this != rhs))
-		return (true);
-	return (false);
-}
-
-bool	BigInt::operator<(unsigned int n) const {
-	BigInt	rhs(n);
 	if (!(*this > rhs) && (*this != rhs))
 		return (true);
 	return (false);
@@ -206,37 +171,17 @@ bool	BigInt::operator>=(const BigInt & rhs) const {
 	return (false);
 }
 
-bool	BigInt::operator>=(unsigned int n) const {
-	BigInt	rhs(n);
-	if (*this > rhs || *this == rhs)
-		return (true);
-	return (false);
-}
-
 bool	BigInt::operator<=(const BigInt & rhs) const {
 	if (!(*this > rhs) || *this == rhs)
 		return (true);
 	return (false);
 }
 
-bool	BigInt::operator<=(unsigned int n) const {
-	BigInt	rhs(n);
-	if (!(*this > rhs) || *this == rhs)
-		return (true);
-	return (false);
-}
-
 BigInt	BigInt::operator<<(const BigInt & shift) const {
-	BigInt	result;
-	result = result << toInt(shift.getVal());	
-	return (result);
-}
-
-BigInt	BigInt::operator<<(unsigned int shift) const {
-	BigInt	result;
+	BigInt			result;
+	unsigned int	i = 0, s = toInt(shift.getVal());
 	result._value = _value;
-	unsigned int	i = 0;
-	while (i < shift)
+	while (i < s)
 	{
 		result._value = '0' + result._value;
 		i++;
@@ -245,23 +190,14 @@ BigInt	BigInt::operator<<(unsigned int shift) const {
 }
 
 BigInt	BigInt::operator>>(const BigInt & shift) const {
-	BigInt	result;
-	result = result >> toInt(shift.getVal());
-	return (result);
-}
-
-BigInt	BigInt::operator>>(unsigned int shift) const {
-	BigInt	result;
+	BigInt			result;
+	unsigned int	i = 0, s = toInt(shift.getVal());
 	result._value = _value;
-	std::reverse(result._value.begin(), result._value.end());
-
-	unsigned int	i = 0;
-	while (i < shift && result._value != "0")
+	while (i < s && !(result._value.empty()))
 	{
-		result._value.erase(result._value.size() - 1);
-		i++;										// !!!
+		result._value.erase(0, 1);
+		i++;
 	}
-	std::reverse(result._value.begin(), result._value.end());
 	return (result);
 }
 
@@ -270,23 +206,107 @@ BigInt &	BigInt::operator<<=(const BigInt & shift) {
 	return (*this);
 }
 
-BigInt &	BigInt::operator<<=(unsigned int shift) {
-	_value = (*this << shift)._value;
-	return (*this);
-}
-
 BigInt &	BigInt::operator>>=(const BigInt & shift) {
 	_value = (*this >> shift)._value;
 	return (*this);
 }
+/* ========================================================================== */
 
-BigInt &	BigInt::operator>>=(unsigned int shift) {
-	_value = (*this >> shift)._value;
-	return (*this);
-}
+/* Non-member overloads */
 
 std::ostream &	operator<<(std::ostream & o, const BigInt & obj)
 {
 	std::cout << obj.getVal() << std::endl;
 	return (o);
 }
+/* ========================================================================== */
+
+// /* Overloads for unsigned int */
+
+// BigInt	BigInt::operator+(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	return (*this + rhs);
+// }
+
+// BigInt &	BigInt::operator+=(unsigned int n) {
+// 	*this = *this + n;
+// 	return (*this);
+// }
+
+// bool	BigInt::operator==(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	if (_value == rhs._value)
+// 		return (true);
+// 	return (false);
+// }
+
+// bool	BigInt::operator!=(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	if (_value != rhs._value)
+// 		return (true);
+// 	return (false);
+// }
+
+// bool	BigInt::operator>(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	return (*this > rhs);
+// }
+
+// bool	BigInt::operator<(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	if (!(*this > rhs) && (*this != rhs))
+// 		return (true);
+// 	return (false);
+// }
+
+// bool	BigInt::operator>=(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	if (*this > rhs || *this == rhs)
+// 		return (true);
+// 	return (false);
+// }
+
+// bool	BigInt::operator<=(unsigned int n) const {
+// 	BigInt	rhs(n);
+// 	if (!(*this > rhs) || *this == rhs)
+// 		return (true);
+// 	return (false);
+// }
+
+// BigInt	BigInt::operator<<(unsigned int shift) const {
+// 	BigInt	result;
+// 	result._value = _value;
+// 	unsigned int	i = 0;
+// 	while (i < shift)
+// 	{
+// 		result._value = '0' + result._value;
+// 		i++;
+// 	}
+// 	return (result);
+// }
+
+// BigInt	BigInt::operator>>(unsigned int shift) const {
+// 	BigInt	result;
+// 	result._value = _value;
+// 	std::reverse(result._value.begin(), result._value.end());
+
+// 	unsigned int	i = 0;
+// 	while (i < shift && result._value != "0")
+// 	{
+// 		result._value.erase(result._value.size() - 1);
+// 		i++;										// !!!
+// 	}
+// 	std::reverse(result._value.begin(), result._value.end());
+// 	return (result);
+// }
+
+// BigInt &	BigInt::operator<<=(unsigned int shift) {
+// 	_value = (*this << shift)._value;
+// 	return (*this);
+// }
+
+// BigInt &	BigInt::operator>>=(unsigned int shift) {
+// 	_value = (*this >> shift)._value;
+// 	return (*this);
+// }
+// /* ========================================================================== */

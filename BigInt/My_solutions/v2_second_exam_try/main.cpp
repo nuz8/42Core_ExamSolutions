@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:45:05 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/07 16:53:02 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/07 20:35:55 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,13 @@ int	main()
 	std::cout << "(e < d): " << (e < d) << std::endl;
 	std::cout << "(e > d): " << (e > d) << std::endl;
 
+	std::cout << std::endl;
 	BigInt	f((d + 1));
-	std::cout << "d = " << d << std::endl;
-	std::cout << "f = " << f << std::endl;
+	BigInt	g(d);
+	BigInt	h(d + f);
+	BigInt	i(1234);
+	BigInt	j(i + 1);
+	std::cout << "d = " << d << "f(d + 1) = " << f << "g(d) + 1 = " << (g + 1) << "h(d + f) = " << h << "i(1234) = " << i << "j(i + 1) = " << j << std::endl;
 	std::cout << "(f > d): " << (f > d) << std::endl;
 	std::cout << "(f < d): " << (f < d) << std::endl;
 	std::cout << "f >= d: " << (f >= d) << std::endl;

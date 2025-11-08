@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 18:50:27 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/06 20:07:41 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/07 20:43:00 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,42 +38,42 @@ public:
 	std::string		toString(unsigned int n);
 	unsigned int	toInt(const std::string & num) const;
 
+	// Overloads for BigInt object types
+	
 	BigInt			operator+(const BigInt & rhs) const;
-	BigInt			operator+(unsigned int n) const;
-
 	BigInt & 		operator+=(const BigInt & rhs);
-	BigInt & 		operator+=(unsigned int n);
-
+	
 	BigInt			operator++(int);
 	BigInt &		operator++();
-
+	
 	bool			operator==(const BigInt & rhs) const;
-	bool			operator==(unsigned int n) const;
-
 	bool			operator!=(const BigInt & rhs) const;
-	bool			operator!=(unsigned int n) const;
-
 	bool			operator>(const BigInt & rhs) const;
-	bool			operator>(unsigned int n) const;
-	
 	bool			operator<(const BigInt & rhs) const;
-	bool			operator<(unsigned int n) const;
-	
 	bool			operator>=(const BigInt & rhs) const;
-	bool			operator>=(unsigned int n) const;
-	
 	bool			operator<=(const BigInt & rhs) const;
-	bool			operator<=(unsigned int n) const;
-
-	BigInt			operator<<(const BigInt & shift) const;
-	BigInt			operator<<(unsigned int shift) const;
-	BigInt			operator>>(const BigInt & shift) const;
-	BigInt			operator>>(unsigned int shift) const;
 	
+	BigInt			operator<<(const BigInt & shift) const;
+	BigInt			operator>>(const BigInt & shift) const;
 	BigInt &		operator<<=(const BigInt & shift);
-	BigInt &		operator<<=(unsigned int shift);
 	BigInt &		operator>>=(const BigInt & shift);
-	BigInt &		operator>>=(unsigned int shift);
+	
+	// // Overloads for unsigned int
+	
+	// BigInt			operator+(unsigned int n) const;
+	// BigInt & 		operator+=(unsigned int n);
+	
+	// bool			operator==(unsigned int n) const;
+	// bool			operator!=(unsigned int n) const;
+	// bool			operator>(unsigned int n) const;
+	// bool			operator<(unsigned int n) const;
+	// bool			operator>=(unsigned int n) const;
+	// bool			operator<=(unsigned int n) const;
+	
+	// BigInt			operator<<(unsigned int shift) const;
+	// BigInt			operator>>(unsigned int shift) const;
+	// BigInt &		operator<<=(unsigned int shift);
+	// BigInt &		operator>>=(unsigned int shift);
 };
 
 std::ostream &	operator<<(std::ostream & o, const BigInt & obj);
