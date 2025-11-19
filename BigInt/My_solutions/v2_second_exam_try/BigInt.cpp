@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BigInt.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:36:58 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/08 20:10:33 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/20 00:48:04 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,12 @@ std::string		BigInt::getVal() const {
 	return (ret);
 }
 
-// Returns a string equivalent of the integer n (in the same order as the input)
-std::string		BigInt::toString(unsigned int n) {
-	std::ostringstream oss;
-	oss << n;
-	return (oss.str());
-}
+// // Returns a string equivalent of the integer n (in the same order as the input)
+// std::string		BigInt::toString(unsigned int n) {
+// 	std::ostringstream oss;
+// 	oss << n;
+// 	return (oss.str());
+// }
 
 // Returns the integer equivalent of the string num (in the same order as the input)
 unsigned int	BigInt::toInt(const std::string & num) const {
@@ -143,18 +143,20 @@ bool	BigInt::operator>(const BigInt & rhs) const {
 		return (false);
 	else
 	{
-		std::string	val = getVal();
-		std::string	rval = rhs.getVal();
-		size_t		i = 0, len = _value.size();
-		while (i < len)
-		{
-			if (val[i] > rval[i])
-				return (true);
-			else if (val[i] < rval[i])
-				return (false);
-			else
-				i++;
-		}
+		// std::string	val = getVal();
+		// std::string	rval = rhs.getVal();
+		// size_t		i = 0, len = _value.size();
+		// while (i < len)
+		// {
+		// 	if (val[i] > rval[i])
+		// 		return (true);
+		// 	else if (val[i] < rval[i])
+		// 		return (false);
+		// 	else
+		// 		i++;
+		// }
+		if (getVal() > rhs.getVal())
+			return (true);
 	}
 	return (false);
 }

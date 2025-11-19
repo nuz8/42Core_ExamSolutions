@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BigInt.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 18:50:27 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/07 20:43:00 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/20 00:47:57 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ public:
 	BigInt &		operator=(const BigInt & rhs);
 
 	std::string		getVal() const;
-	std::string		toString(unsigned int n);
+	// std::string		toString(unsigned int n);
 	unsigned int	toInt(const std::string & num) const;
 
 	// Overloads for BigInt object types
@@ -58,7 +58,7 @@ public:
 	BigInt &		operator<<=(const BigInt & shift);
 	BigInt &		operator>>=(const BigInt & shift);
 	
-	// // Overloads for unsigned int
+	// // Overloads for unsigned int		// Don't need these since a constructor for unsigned int type exists which will be called automatically
 	
 	// BigInt			operator+(unsigned int n) const;
 	// BigInt & 		operator+=(unsigned int n);
