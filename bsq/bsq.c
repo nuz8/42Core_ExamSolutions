@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 01:58:07 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/27 19:55:28 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/27 20:12:00 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ int		parse_map(bsq* obj, FILE* file);
 int		parse_first_line(bsq* obj, FILE* file);
 char*	ft_strdup(char* str);
 size_t	ft_strlen(char* str);
-char*	str_truncate_back(char* tline, int n_chars);
-int		ft_atoi(char* str);
-// void	getControlChars(bsq* obj);
+int		ft_atoi(char* str, size_t n_chars);
 int		init_map(bsq *obj, FILE* file);
 int		init_dpTable(bsq *obj);
 void	fillDPTable(bsq* obj);
@@ -110,7 +108,6 @@ int	parse_map(bsq* obj, FILE* file)
 int	parse_first_line(bsq* obj, FILE* file)
 {
 	char*	tline = NULL;
-	char*	tline2 = NULL;
 	size_t	len;
 
 	obj->read = getline(&obj->line, &obj->len, file);
@@ -123,11 +120,7 @@ int	parse_first_line(bsq* obj, FILE* file)
 	obj->empty = tline[len - 3];
 	obj->obs = tline[len - 2];
 	obj->full = tline[len - 1];
-	tline2 = str_truncate_back(tline, 3);
-	if (!tline2)
-		return (free(tline), -1);
-	obj->rows = ft_atoi(tline2);
-	free(tline2);
+	obj->rows = ft_atoi(tline, 3);
 	free(tline);
 	return (0);
 }
@@ -164,35 +157,18 @@ size_t	ft_strlen(char* str)
 	return (i);
 }
 
-
-// Fn to truncate the 3 retrieved chars from the back of the string tline, and return a new one
-char*	str_truncate_back(char* tline, int n_chars)
-{
-	char*	new = NULL;
-	size_t	len = ft_strlen(tline) - n_chars;
-	size_t	i = 0;
-
-	new = malloc((len + 1) * sizeof(char));
-	if (!new)
-		return (fprintf(stderr, "Error: new truncated string malloc failed\n"), NULL);
-	while (i < len)
-	{
-		new[i] = tline[i];
-		i++;
-	}
-	new[len] = '\0';
-	return (new);
-}
-
 /*
-Simpler form of atoi fn, needs the string to be null-terminated
+Simpler form of atoi fn, with an additional parameter n_chars 
 	- only for +ve integers
 	- returns -1 when str is NULL
 	- returns 0 when str is empty
+	- n_chars parameter is to only proceed conversion upto and
+	  not including that many characters at the end of str
 */
-int	ft_atoi(char* str)
+int	ft_atoi(char* str, size_t n_chars)
 {
-	int	i = 0, ret = 0;
+	int		ret = 0;
+	size_t	i = 0, len;
 
 	if (!str)
 		return (-1);
@@ -200,35 +176,14 @@ int	ft_atoi(char* str)
 		return (0);
 	while (str[i] && str[i] == ' ')
 		i++;
-	while (str[i] >= '0' && str[i] <= '9')
+	len = ft_strlen(str) - n_chars;
+	while (i < len && str[i] >= '0' && str[i] <= '9')
 	{
 		ret = ret * 10 + (str[i] - '0');
 		i++;
 	}
 	return (ret);
 }
-
-// void	getControlChars(bsq* obj)
-// {
-// 	size_t	len = strlen(obj->line);
-	
-// 	if (len == 6)
-// 	{
-// 		char rows[3] = {obj->line[0], obj->line[1], 0};
-// 		obj->rows = atoi(rows);			// this fn needs to be coded
-// 		obj->empty = obj->line[2];
-// 		obj->obs = obj->line[3];
-// 		obj->full = obj->line[4];
-// 	}
-// 	else
-// 	{
-// 		char rows[2] = {obj->line[0], 0};
-// 		obj->rows = atoi(rows);			// this fn needs to be coded
-// 		obj->empty = obj->line[1];
-// 		obj->obs = obj->line[2];
-// 		obj->full = obj->line[3];
-// 	}
-// }
 
 int	init_map(bsq *obj, FILE* file)
 {
