@@ -6,41 +6,26 @@
 /*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 01:58:07 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/27 01:16:30 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/27 19:55:28 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
+#include "bsq.h"
 
 /*
 Allowed functions and globals: malloc, calloc, realloc, free, fopen, fclose,
 getline, fscanf, fputs, fprintf, stderr, stdout, stdin, errno
 */
 
-typedef struct bsq
-{
-	char**	map;
-	int**	dpTable;
-	char*	line;
-	size_t	len;
-	ssize_t	read;
-	int		rows;
-	int		width;
-	int		index_mxX;
-	int		index_mxY;
-	int		bSq;
-	char	empty;
-	char	obs;
-	char	full;
-}	bsq;
-
 int		solveBSQ(FILE *file);
 void	init_bsq(bsq* obj);
-void	getControlChars(bsq* obj);
+int		parse_map(bsq* obj, FILE* file);
+int		parse_first_line(bsq* obj, FILE* file);
+char*	ft_strdup(char* str);
+size_t	ft_strlen(char* str);
+char*	str_truncate_back(char* tline, int n_chars);
+int		ft_atoi(char* str);
+// void	getControlChars(bsq* obj);
 int		init_map(bsq *obj, FILE* file);
 int		init_dpTable(bsq *obj);
 void	fillDPTable(bsq* obj);
@@ -84,13 +69,12 @@ int	solveBSQ(FILE *file)
 	if (!obj)
 		return (fprintf(stderr, "malloc error\n"), -1);
 	init_bsq(obj);
-	obj->read = getline(&obj->line, &obj->len, file);
-	if (obj->read != -1)
-		getControlChars(obj);
+	if (parse_map(obj, file) < 0)
+		return (cleanAll(obj), -1);
 	if (init_map(obj, file) == -1)
-		return (1);
+		return (cleanAll(obj), -1);
 	if (init_dpTable(obj) == -1)
-		return (1);
+		return (cleanAll(obj), -1);
 	fillDPTable(obj);
 	findIndex(obj);
 	fillMap(obj);
@@ -116,27 +100,135 @@ void	init_bsq(bsq* obj)
 	obj->bSq = 0;
 }
 
-void	getControlChars(bsq* obj)
+int	parse_map(bsq* obj, FILE* file)
 {
-	size_t	len = strlen(obj->line);
-	
-	if (len == 6)
-	{
-		char rows[3] = {obj->line[0], obj->line[1], 0};
-		obj->rows = atoi(rows);			// this fn needs to be coded
-		obj->empty = obj->line[2];
-		obj->obs = obj->line[3];
-		obj->full = obj->line[4];
-	}
-	else
-	{
-		char rows[2] = {obj->line[0], 0};
-		obj->rows = atoi(rows);			// this fn needs to be coded
-		obj->empty = obj->line[1];
-		obj->obs = obj->line[2];
-		obj->full = obj->line[3];
-	}
+	if (parse_first_line(obj, file) < 0)
+		return (-1);
+	return (0);
 }
+
+int	parse_first_line(bsq* obj, FILE* file)
+{
+	char*	tline = NULL;
+	char*	tline2 = NULL;
+	size_t	len;
+
+	obj->read = getline(&obj->line, &obj->len, file);
+	if (obj->read == -1)
+		return (fprintf(stderr, "Error: getline failed on first read\n"), -1);
+	tline = ft_strdup(obj->line);
+	if (!tline)
+		return (fprintf(stderr, "Error: ft_strdup returned NULL pointer\n"), -1);	
+	len = ft_strlen(obj->line);
+	obj->empty = tline[len - 3];
+	obj->obs = tline[len - 2];
+	obj->full = tline[len - 1];
+	tline2 = str_truncate_back(tline, 3);
+	if (!tline2)
+		return (free(tline), -1);
+	obj->rows = ft_atoi(tline2);
+	free(tline2);
+	free(tline);
+	return (0);
+}
+
+char*	ft_strdup(char* str)
+{
+	char*	new = NULL;
+	size_t	len, i = 0;
+
+	if (!str || !*str)
+		return (NULL);
+	len = ft_strlen(str);
+	new = malloc((len + 1) * sizeof(char));
+	if (!new)
+		return (fprintf(stderr, "Error: ft_strdup malloc failed\n"), NULL);
+	while (i < len)
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[len] = '\0';
+	return (new);
+}
+
+// Fn to get the length of the string upto and not including the '\n' or '\0', whichever comes first
+size_t	ft_strlen(char* str)
+{
+	int	i = 0;
+
+	if (!str || !*str)
+		return (0);
+	while (str[i] && str[i] != '\n')
+		i++;
+	return (i);
+}
+
+
+// Fn to truncate the 3 retrieved chars from the back of the string tline, and return a new one
+char*	str_truncate_back(char* tline, int n_chars)
+{
+	char*	new = NULL;
+	size_t	len = ft_strlen(tline) - n_chars;
+	size_t	i = 0;
+
+	new = malloc((len + 1) * sizeof(char));
+	if (!new)
+		return (fprintf(stderr, "Error: new truncated string malloc failed\n"), NULL);
+	while (i < len)
+	{
+		new[i] = tline[i];
+		i++;
+	}
+	new[len] = '\0';
+	return (new);
+}
+
+/*
+Simpler form of atoi fn, needs the string to be null-terminated
+	- only for +ve integers
+	- returns -1 when str is NULL
+	- returns 0 when str is empty
+*/
+int	ft_atoi(char* str)
+{
+	int	i = 0, ret = 0;
+
+	if (!str)
+		return (-1);
+	if (!*str)
+		return (0);
+	while (str[i] && str[i] == ' ')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		ret = ret * 10 + (str[i] - '0');
+		i++;
+	}
+	return (ret);
+}
+
+// void	getControlChars(bsq* obj)
+// {
+// 	size_t	len = strlen(obj->line);
+	
+// 	if (len == 6)
+// 	{
+// 		char rows[3] = {obj->line[0], obj->line[1], 0};
+// 		obj->rows = atoi(rows);			// this fn needs to be coded
+// 		obj->empty = obj->line[2];
+// 		obj->obs = obj->line[3];
+// 		obj->full = obj->line[4];
+// 	}
+// 	else
+// 	{
+// 		char rows[2] = {obj->line[0], 0};
+// 		obj->rows = atoi(rows);			// this fn needs to be coded
+// 		obj->empty = obj->line[1];
+// 		obj->obs = obj->line[2];
+// 		obj->full = obj->line[3];
+// 	}
+// }
 
 int	init_map(bsq *obj, FILE* file)
 {
