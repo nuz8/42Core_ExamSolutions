@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 01:58:07 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/26 22:03:08 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/27 01:16:30 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,46 +38,65 @@ typedef struct bsq
 	char	full;
 }	bsq;
 
+int		solveBSQ(FILE *file);
 void	init_bsq(bsq* obj);
-bool	checkFiles(char** av, FILE** files, bool* validMaps, int nFiles);
 void	getControlChars(bsq* obj);
-int		solveBSQ(bsq *obj, FILE *file);
 int		init_map(bsq *obj, FILE* file);
 int		init_dpTable(bsq *obj);
 void	fillDPTable(bsq* obj);
 void	findIndex(bsq* obj);
 void	fillMap(bsq* obj);
+void	printBSQ(bsq* obj);
 void	cleanAll(bsq *obj);
-void	closeFiles(FILE **files, int nFiles, char** av);
 void	print_struct_bsq(bsq* obj);
 
 int	main(int ac, char** av)
 {
-	int		nFiles = ac - 1, ret = 0;
-	FILE*	files[nFiles];
-	bool	validMaps[nFiles];
-	bsq		obj;
+	int		i = 0, ret = 1;
+	FILE*	file;
 
-	init_bsq(&obj);
-
-	// Check if map files are openable
-	if (!checkFiles(av, files, validMaps, nFiles))
-		return (1);
-
-	obj.len = 0;
-	obj.read = getline(&obj.line, &obj.len, files[0]);
-
-	if (obj.read != -1)
-		getControlChars(&obj);
-	
-	ret = solveBSQ(&obj, files[0]);
-	fillMap(&obj);
-
-	print_struct_bsq(&obj);
-
-	free(obj.line);
-	closeFiles(files, nFiles, av);
+	if (ac == 1)
+	{
+		FILE*	file = stdin;
+		return (solveBSQ(file));
+	}
+	else
+	{
+		while (++i < ac)
+		{
+			file = fopen(av[i], "r");
+			if (!file)
+			{
+				fprintf(stderr, "Error: cannot open file: %s\n", av[i]);
+				continue;
+			}
+			ret = solveBSQ(file);
+			fclose(file);
+		}
+	}
 	return (ret);
+}
+
+int	solveBSQ(FILE *file)
+{
+	bsq		*obj = malloc(sizeof(bsq));
+
+	if (!obj)
+		return (fprintf(stderr, "malloc error\n"), -1);
+	init_bsq(obj);
+	obj->read = getline(&obj->line, &obj->len, file);
+	if (obj->read != -1)
+		getControlChars(obj);
+	if (init_map(obj, file) == -1)
+		return (1);
+	if (init_dpTable(obj) == -1)
+		return (1);
+	fillDPTable(obj);
+	findIndex(obj);
+	fillMap(obj);
+	printBSQ(obj);
+	cleanAll(obj);
+	return (0);
 }
 
 void	init_bsq(bsq* obj)
@@ -95,30 +114,6 @@ void	init_bsq(bsq* obj)
 	obj->index_mxX = 0;
 	obj->index_mxY = 0;
 	obj->bSq = 0;
-}
-
-bool	checkFiles(char** av, FILE** files, bool* validMaps, int nFiles)
-{
-	int		i = 0;
-	while (++i <= nFiles)
-	{
-		files[i - 1] = fopen(av[i], "r");
-		if (!files[i - 1])
-		{
-			fprintf(stderr, "Error: cannot open map: %s\n", av[i]);
-			validMaps[i - 1] = false;
-		}
-		else
-		{
-			validMaps[i - 1] = true;
-			printf("Opened file : %s\n", av[i]);
-		}
-	}
-	i = -1;
-	while (++i < nFiles)
-		if (validMaps[i])
-			return (true);
-	return (false);
 }
 
 void	getControlChars(bsq* obj)
@@ -143,23 +138,13 @@ void	getControlChars(bsq* obj)
 	}
 }
 
-int	solveBSQ(bsq *obj, FILE *file)
-{
-	obj->read = getline(&obj->line, &obj->len, file);		// line now has already the 1st row of the map
-	obj->width = (int)(obj->read) - 1;
-
-	if (init_map(obj, file) == -1)
-		return (1);
-	if (init_dpTable(obj) == -1)
-		return (1);
-	fillDPTable(obj);
-	findIndex(obj);
-	return (0);
-}
-
 int	init_map(bsq *obj, FILE* file)
 {
 	int	i = -1, j = -1;
+
+	obj->read = getline(&obj->line, &obj->len, file);	// line now has already the 1st row of the map
+	obj->width = (int)(obj->read) - 1;
+
 	obj->map = malloc((obj->rows + 1) * sizeof(char*));
 	if (!obj->map)
 		return (cleanAll(obj), -1);
@@ -192,7 +177,7 @@ int	init_dpTable(bsq *obj)
 	{
 		obj->dpTable[i] = calloc((obj->width), sizeof(int));
 		if (!obj->dpTable[i])
-			return (cleanAll(obj), -1);
+			return (fprintf(stderr, "Calloc error\n"), cleanAll(obj), -1);
 	}
 	return (0);
 }
@@ -206,7 +191,7 @@ void	fillDPTable(bsq* obj)
 	char	empty = obj->empty, obs = obj->obs;
 
 	// initializing first row of dpTable
-	while (++i <= width)
+	while (++i < width)
 	{
 		if (map[0][i] == empty)
 			dpTable[0][i] = 1;
@@ -228,7 +213,7 @@ void	fillDPTable(bsq* obj)
 	while (++j < rows)
 	{
 		i = 0;
-		while (++i <= width)
+		while (++i < width)
 		{
 			if (map[j][i] == empty)
 			{
@@ -259,7 +244,6 @@ void	findIndex(bsq* obj)
 				newMax = dpTable[j][i];
 				ix = i;
 				iy = j;
-				// printf("New maximum at (%d, %d) = %d\n", i, j, newMax);
 			}
 		}
 	}
@@ -284,63 +268,62 @@ void	fillMap(bsq* obj)
 	}
 }
 
+void	printBSQ(bsq* obj)
+{
+	if (obj->map)
+	{
+		int	i = -1;
+		while (obj->map[++i])
+			fprintf(stdout, "%s\n", obj->map[i]);
+	}
+}
+
 void	cleanAll(bsq *obj)
 {
 	int	i = -1;
 	if (obj->map)
 	{
-		while (++i <= obj->rows)
-			if (obj->map[i])
-				free(obj->map[i]);
+		while (obj->map[++i])
+			free(obj->map[i]);
+		free(obj->map);
+		obj->map = NULL;
 	}
-	free(obj->map);
-	obj->map = NULL;
 
 	if (obj->dpTable)
 	{
 		i = -1;
-		while (++i <= obj->rows)
-			if (obj->dpTable[i])
-				free(obj->dpTable[i]);
+		while (obj->dpTable[++i])
+			free(obj->dpTable[i]);
+		free(obj->dpTable);
+		obj->dpTable = NULL;
 	}
-	free(obj->dpTable);
-	obj->dpTable = NULL;
-}
-
-void	closeFiles(FILE **files, int nFiles, char** av)
-{
-	int	i = -1;
-	while (++i < nFiles)
-	{
-		if (files[i])
-		{
-			fclose(files[i]);
-			printf("Closed file: %s\n", av[i + 1]);
-		}
-	}
+	if (obj->line)
+		free(obj->line);
+	if (obj)
+		free(obj);
 }
 
 void	print_struct_bsq(bsq* obj)
 {	
 	int	i, j;
 	
-	printf("rows	:	%d\n", obj->rows);
-	printf("width	:	%d\n", obj->width);
-	printf("empty	:	%c\n", obj->empty);
-	printf("obs	:	%c\n", obj->obs);
-	printf("full	:	%c\n", obj->full);
-	printf("index	:	(%d, %d)\n", obj->index_mxX, obj->index_mxY);
-	printf("bSq	:	%d\n", obj->bSq);
-	printf("\n");
+	fprintf(stdout, "rows	:	%d\n", obj->rows);
+	fprintf(stdout, "width	:	%d\n", obj->width);
+	fprintf(stdout, "empty	:	%c\n", obj->empty);
+	fprintf(stdout, "obs	:	%c\n", obj->obs);
+	fprintf(stdout, "full	:	%c\n", obj->full);
+	fprintf(stdout, "index	:	(%d, %d)\n", obj->index_mxX, obj->index_mxY);
+	fprintf(stdout, "bSq	:	%d\n", obj->bSq);
+	fprintf(stdout, "\n");
 
 	// printing the map
 	if (obj->map)
 	{
 		i = -1;
 		while (obj->map[++i])
-			printf("%d:\t:%d\t%s\n", i + 1, obj->width, obj->map[i]);
+			fprintf(stdout, "%d:\t:%d\t%s\n", i + 1, obj->width, obj->map[i]);
 	}
-	printf("\n");
+	fprintf(stdout, "\n");
 
 	// printing dpTable
 	if (obj->dpTable)
@@ -349,13 +332,11 @@ void	print_struct_bsq(bsq* obj)
 		while (++j < obj->rows)
 		{
 			i = -1;
-			printf("%d:\t:%d\t", j + 1, obj->width);
+			fprintf(stdout, "%d:\t:%d\t", j + 1, obj->width);
 			while (++i < obj->width)
-				printf("%d", obj->dpTable[j][i]);
-			printf("\n");
+				fprintf(stdout, "%d", obj->dpTable[j][i]);
+			fprintf(stdout, "\n");
 		}
 	}
-	printf("\n");
+	fprintf(stdout, "\n");
 }
-
-
