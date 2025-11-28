@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 01:58:07 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/27 20:49:39 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/28 23:20:32 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	solveBSQ(FILE *file)
 
 	if (!obj)
 		return (fprintf(stderr, "malloc error\n"), -1);
-	init_bsq(obj, file);
+	if (init_bsq(obj, file) < 0)
+		return (-1);
 	fillDPTable(obj);
 	findIndex(obj);
 	fillMap(obj);

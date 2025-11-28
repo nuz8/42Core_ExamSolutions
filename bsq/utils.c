@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 20:23:54 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/27 20:40:03 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/11/28 22:54:33 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 char*	ft_strdup(char* str);
 size_t	ft_strlen(char* str);
 int		ft_atoi(char* str, size_t n_chars);
+int		ft_isprint(int c);
 void	cleanAll(bsq *obj);
 void	print_struct_bsq(bsq* obj);
 
+// Uses ft_strlen()
 char*	ft_strdup(char* str)
 {
 	char*	new = NULL;
@@ -78,6 +80,14 @@ int	ft_atoi(char* str, size_t n_chars)
 	return (ret);
 }
 
+int	ft_isprint(int c)
+{
+	if (c >= 32 && c <= 126)
+		return (1);
+	else
+		return (0);
+}
+
 void	cleanAll(bsq *obj)
 {
 	int	i = -1;
@@ -88,7 +98,6 @@ void	cleanAll(bsq *obj)
 		free(obj->map);
 		obj->map = NULL;
 	}
-
 	if (obj->dpTable)
 	{
 		i = -1;
@@ -97,6 +106,8 @@ void	cleanAll(bsq *obj)
 		free(obj->dpTable);
 		obj->dpTable = NULL;
 	}
+	if (obj->first_line)
+		free(obj->first_line);
 	if (obj->line)
 		free(obj->line);
 	if (obj)
