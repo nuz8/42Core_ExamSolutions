@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   life.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 23:45:49 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/25 20:23:10 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/12/02 15:52:07 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <string.h>
 
 // Allowed: atoi, read, putchar, malloc, calloc, realloc, free
-// echo 'sdxssdswdxddddsxaadwxwdxwaa' | ./a.out 10 6 0 | cat -e
+// echo 'sdxssdswdxddddsxaadwxwdxwaa' | ./life 10 6 0 | cat -e
 
 char***	allocate_board(int iter, int width, int height);
 void	initialize_board(char ***board, int iter, int width, int height);
@@ -28,9 +28,6 @@ char	get_new_state(char old_state, int nbrs);
 void	map_board(char ***board, int width, int height);
 void	print_board_instance(char **board, int width, int height);
 void	clear_board(char*** board);
-
-void	printF_board_instance(char **board, int height);
-void	show_evolution(char*** board, int iter, int width, int height);
 
 int main(int ac, char** av)
 {
@@ -53,7 +50,6 @@ int main(int ac, char** av)
 	if (iter)
 		simulate_board(board, iter, width, height);
 	print_board_instance(board[iter], width, height);
-	show_evolution(board, iter, width, height);
 	return (clear_board(board), 0);
 }
 
@@ -216,25 +212,5 @@ void	clear_board(char*** board)
 			free(board[i]);	
 		}
 		free(board);
-	}
-}
-
-void	printF_board_instance(char **board, int height)
-{
-	int y = 0;
-	while (++y <= height)
-		printf("%s\n", (board[y] + 1));
-	fflush(STDIN_FILENO);
-}
-
-void	show_evolution(char*** board, int iter, int width, int height)
-{
-	int i = 0;
-	(void)width;
-	while (++i <= iter)
-	{
-		printF_board_instance(board[i], height);
-		putchar('\n');
-		usleep(500000);
 	}
 }

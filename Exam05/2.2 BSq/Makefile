@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+         #
+#    By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/03 23:35:34 by pamatya           #+#    #+#              #
-#    Updated: 2025/11/28 23:16:21 by pamatya          ###   ########.fr        #
+#    Updated: 2025/12/02 15:45:47 by pamatya          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME			:=	bsq
 CC				:=	gcc
 CFLAGS			:=	-Wall -Wextra -Werror
 
-SRCS			:=	main.c bsq.c init.c valids.c utils.c
+SRCS			:=	bsq.c
 
 OBJS			:=	$(SRCS:.c=.o)
 
