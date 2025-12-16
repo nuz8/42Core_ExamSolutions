@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vect2.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 19:30:37 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/19 23:12:47 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/12/16 19:57:20 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ vect2 &	vect2::operator+=(const vect2 & rhs)
 	return (*this);
 }
 // vect2	vect2::operator-(const vect2 & rhs) { return (vect2((_x - rhs._x, _y - rhs._y))); }		// This won't work without the parenthesis
-vect2	vect2::operator-(const vect2 & rhs) { return (vect2(((_x - rhs._x), (_y - rhs._y)))); }
+vect2	vect2::operator-(const vect2 & rhs) { return (vect2(_x - rhs._x, _y - rhs._y)); }
 vect2 &	vect2::operator-=(const vect2 & rhs)
 {
 	_x = _x - rhs._x;
