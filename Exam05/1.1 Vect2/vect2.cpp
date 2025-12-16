@@ -6,7 +6,7 @@
 /*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 19:30:37 by pamatya           #+#    #+#             */
-/*   Updated: 2025/12/16 19:57:20 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/12/16 20:13:25 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ vect2 &	vect2::operator+=(const vect2 & rhs)
 	_y = _y + rhs._y;
 	return (*this);
 }
-// vect2	vect2::operator-(const vect2 & rhs) { return (vect2((_x - rhs._x, _y - rhs._y))); }		// This won't work without the parenthesis
 vect2	vect2::operator-(const vect2 & rhs) { return (vect2(_x - rhs._x, _y - rhs._y)); }
 vect2 &	vect2::operator-=(const vect2 & rhs)
 {
@@ -56,40 +55,6 @@ vect2 &	vect2::operator*=(const vect2 & rhs)
 	_y = _y * rhs._y;
 	return (*this);
 }
-
-// vect2	vect2::operator+(int scalar)
-// {
-// 	vect2	tmp(_x + scalar, _y + scalar);
-// 	return (tmp);
-// }
-// vect2 &	vect2::operator+=(int scalar)
-// {
-// 	_x = _x + scalar;
-// 	_y = _y + scalar;
-// 	return (*this);
-// }
-// vect2	vect2::operator-(int scalar)
-// {
-// 	vect2	tmp(_x - scalar, _y - scalar);
-// 	return (tmp);
-// }
-// vect2 &	vect2::operator-=(int scalar)
-// {
-// 	_x = _x - scalar;
-// 	_y = _y - scalar;
-// 	return (*this);
-// }
-// vect2	vect2::operator*(int scalar)
-// {
-// 	vect2	tmp(_x * scalar, _y * scalar);
-// 	return (tmp);
-// }
-// vect2 &	vect2::operator*=(int scalar)
-// {
-// 	_x = _x * scalar;
-// 	_y = _y * scalar;
-// 	return (*this);
-// }
 
 vect2	vect2::operator-() const { return (vect2(-1 * _x, -1 * _y)); }
 

@@ -38,12 +38,6 @@ public:
 	vect2 &	operator-=(const vect2 & rhs);	
 	vect2	operator*(const vect2 & rhs);
 	vect2 &	operator*=(const vect2 & rhs);
-	// vect2	operator+(int scalar);			//
-	// vect2 &	operator+=(int scalar);			//
-	// vect2	operator-(int scalar);			//
-	// vect2 &	operator-=(int scalar);			//
-	// vect2	operator*(int scalar);			//
-	// vect2 &	operator*=(int scalar);			//
 
 	vect2	operator-() const ;
 
