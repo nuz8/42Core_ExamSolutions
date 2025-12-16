@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vect2.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pamatya <pamatya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pamatya <pamatya@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 19:30:37 by pamatya           #+#    #+#             */
-/*   Updated: 2025/11/19 23:12:47 by pamatya          ###   ########.fr       */
+/*   Updated: 2025/12/16 20:11:33 by pamatya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,23 @@ vect2 &	vect2::operator+=(const vect2 & rhs)
 	_y = _y + rhs._y;
 	return (*this);
 }
-// vect2	vect2::operator-(const vect2 & rhs) { return (vect2((_x - rhs._x, _y - rhs._y))); }		// This won't work without the parenthesis
-vect2	vect2::operator-(const vect2 & rhs) { return (vect2(((_x - rhs._x), (_y - rhs._y)))); }
+
+/*
+This won't work without the parenthesis separating the two args either side of
+the comma, because the compiler thinks it is one argument and hence throws away 
+the resulf of the left hand operand. This means that if it were to work, the 
+wrong constructor would be called i.e. single param constructor instead of the 
+double one. The -Werror flag helps here to flag it as an error and avoid a 
+hard-to-detect symantic error situation.
+So, either the extra parenthesis should be removed altogether, or the two args
+need to be separately enclosed by separate pairs of parenthesis to explicitly
+let the compiler know which constructor the programer intends to call. This
+is an ambiguous call warning converted to error, which would otherwise compile
+create an unintended bug that would be hard to detect.
+*/
+// vect2	vect2::operator-(const vect2 & rhs) { return (vect2((_x - rhs._x, _y - rhs._y))); }
+vect2	vect2::operator-(const vect2 & rhs) { return (vect2(_x - rhs._x, _y - rhs._y)); }
+
 vect2 &	vect2::operator-=(const vect2 & rhs)
 {
 	_x = _x - rhs._x;
